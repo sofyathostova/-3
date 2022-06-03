@@ -19,6 +19,9 @@ def get_text_messages(bot, cur_user, message):
     elif ms_text == "Прислать анекдот":
         bot.send_message(chat_id, text=get_anekdot())
 
+    elif ms_text == "Прислать цитату":
+        bot.send_message(chat_id, text=get_quote())
+
     elif ms_text == "Прислать новости":
         bot.send_message(chat_id, text=get_news())
 
@@ -59,6 +62,20 @@ def get_anekdot():
             array_anekdots.append(result.getText().strip())
     if len(array_anekdots) > 0:
         return array_anekdots[0]
+    else:
+        return ""
+
+
+# -----------------------------------------------------------------------
+def get_quote():
+    result = ""
+    req = requests.get('https://socratify.net/quotes/random')
+    if req.status_code == 200:
+        soup = bs4.BeautifulSoup(req.text, "html.parser")
+        result_find = soup.select('.b-quote__text')
+        result = result_find[0].getText().strip()
+    if len(result) > 0:
+        return result
     else:
         return ""
 
